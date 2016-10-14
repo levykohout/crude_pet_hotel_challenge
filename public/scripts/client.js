@@ -5,7 +5,7 @@ $(function(){
     $('#pet').on('submit', registerPet);
     $('#visits').on('click', '.delete', deleteRow);
     $('#visits').on('click', '.save', updateRow);
-    $('#visits').on('click', '.checkIn', updateStatus);
+    // $('#visits').on('click', '.checkIn', updateStatus);
 
 
 });
@@ -57,7 +57,7 @@ function registerOwner(event){
 
 function displayPets(response){
 console.log(response);
-    $('#tableRows').remove();
+    $('#visits').empty();
 
     response.forEach(function(pet){
 
