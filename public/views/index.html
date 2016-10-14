@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link  rel="stylesheet" href="styles/stylesheet.css" />
+        <script src="vendors/jquery.min.js"></script>
+        <script src="scripts/client.js"></script>
+        <title></title>
+    </head>
+    <body>
+        <h1>CRUDE PETS HOTEL</h1>
+        <h2>Owner Registration</h2>
+            <form id="owner">
+                <label for="first_name">First Name</label>
+                <input type="text" name="first_name"  />
+
+                <label for="last_name">Last Name</label>
+                <input type="text" name="last_name" />
+
+                <button type="submit" class="owner_registration">Register</button>
+            </form>
+        <h3>Pets</h3>
+            <form id="pet">
+                <label for="owner_name"></label>
+                <select name="owner_id">
+
+                </select>
+                <label for="pet_name"></label>
+                <input type="text" name="pet_name" />
+
+                <label for="pet_breed"></label>
+                <input type="text" name="pet_breed" />
+
+                <label for="pet_color"></label>
+                <input type="text" name="pet_color" />
+
+                <button type="submit" class="pet_registration">Add Pet</button>
+            </form>
+
+
+            <table id="visits">
+                <thead>
+                    <th>Owner</th>
+                    <th>Pet</th>
+                    <th>Breed</th>
+                    <th>Color</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                    <th>Check In/Out</th>
+                </thead>
+                <tr id="tableRows">
+
+                </tr>
+            </table>
+            
+
+    </body>
+</html>
