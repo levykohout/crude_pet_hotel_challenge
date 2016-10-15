@@ -5,16 +5,15 @@ var config ={       //to access database
     database:'rho'
 };
 
-router.put('/:id', function(req, res){
+router.post('/IN', function(req, res){
+    var check_in = req.body.check_in;
+    var pet_id=req.body.pet_id;
 
-    var id = req.params.id; //takes the value from /:id
-    var name=req.body.pet_name;
-    var breed = req.body.pet_breed;
-    var color = req.body.pet_color;
-    var owner_id = req.body.owner_id;
+    console.log(check_in);
 
 
     pool.connect(function(err, client, done){
+
         try{  //try block and finally useful way to clean up system resources
         if(err){
             console.log('Error connecting to the DB', err);
@@ -23,8 +22,9 @@ router.put('/:id', function(req, res){
             return; //stops execution of the function
         }
         //Update database
-        client.query('UPDATE pet SET name=$1, breed=$2, color=$3, owner_id=$4 WHERE id=$5 RETURNING *;',
-                    [name, breed, color, owner_id, id], function(err, result){
+
+        client.query('INSERT INTO visits (check_in, pet_id) VALUES ($1, $2) returning *;',
+                    [check_in, pet_id], function(err, result){
                         if(err){
                             console.log('Error querying database',err);
                             res.sendStatus(500);
@@ -38,10 +38,52 @@ router.put('/:id', function(req, res){
                 } finally {
                     done();
                 }
+
+            });
     });
 
 
-});
+
+
+
+router.put('/OUT/:id', function(req, res){
+    var date = req.body.date;
+
+    var id = req.params.id;
+    
+console.log(date);
+
+    pool.connect(function(err, client, done){
+
+        try{  //try block and finally useful way to clean up system resources
+        if(err){
+            console.log('Error connecting to the DB', err);
+            res.sendStatus(500);
+
+            return; //stops execution of the function
+        }
+        //Update database
+
+        client.query('UPDATE visits SET check_out=$1, pet_id=$2 WHERE id=$3 RETURNING *;',
+                    [date, id, id], function(err, result){
+                        if(err){
+                            console.log('Error querying database',err);
+                            res.sendStatus(500);
+
+                        } else {
+
+                        res.send(result.rows);
+                         //very important to call done everytime
+                     }
+                    });
+                } finally {
+                    done();
+                }
+
+            });
+    });
+
+
 
 
 

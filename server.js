@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 
 var petsRouter =require('./routes/pets');
 var ownerRouter=require('./routes/owners')
+var statusRouter=require('./routes/status');
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -12,6 +13,7 @@ app.use(express.static('public'));
 
 app.use('/pet', petsRouter);
 app.use('/owner',ownerRouter);
+app.use('/status',statusRouter);
 
 // serve the index page at /
 app.get('/', function (req, res) {
