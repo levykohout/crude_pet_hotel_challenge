@@ -23,7 +23,7 @@ router.get('/', function(req, res){
 
 //takes input as 1. SQL string 2(optional)-input parameters 3. callback function to execute once query is finished takes an error object
 // and a result object as arguments
-        client.query('SELECT * FROM owner JOIN pet ON pet.owner_id=owner.id', function(err, result){
+        client.query('SELECT pet.id AS petID, visits.id AS visitId, visits.status, pet.name, pet.breed, pet.color,pet.owner_id,owner.first_name,owner.last_name FROM pet LEFT JOIN visits ON visits.pet_id=pet.id JOIN owner ON pet.owner_id=owner.id', function(err, result){
             done();
             if(err){
                 console.log('Error connecting to the DB', err);

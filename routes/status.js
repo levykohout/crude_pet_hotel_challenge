@@ -5,9 +5,14 @@ var config ={       //to access database
     database:'rho'
 };
 
+//initialize the database connection pool defaults at 10 connection
+var pool = new pg.Pool(config);
+
+
 router.post('/IN', function(req, res){
     var check_in = req.body.check_in;
     var pet_id=req.body.pet_id;
+    var status=req.body.status;
 
     console.log(check_in);
 
@@ -23,8 +28,8 @@ router.post('/IN', function(req, res){
         }
         //Update database
 
-        client.query('INSERT INTO visits (check_in, pet_id) VALUES ($1, $2) returning *;',
-                    [check_in, pet_id], function(err, result){
+        client.query('INSERT INTO visits (check_in, pet_id,status) VALUES ($1, $2, $3) returning *;',
+                    [check_in, pet_id,status], function(err, result){
                         if(err){
                             console.log('Error querying database',err);
                             res.sendStatus(500);
@@ -46,12 +51,12 @@ router.post('/IN', function(req, res){
 
 
 
-router.put('/OUT/:id', function(req, res){
-    var date = req.body.date;
+router.put('/:id', function(req, res){
+    var check_out = req.body.check_out;
+    var id=req.params.id;
+    var pet_id = req.body.pet_id;
+    var status=req.body.status;
 
-    var id = req.params.id;
-    
-console.log(date);
 
     pool.connect(function(err, client, done){
 
@@ -64,8 +69,8 @@ console.log(date);
         }
         //Update database
 
-        client.query('UPDATE visits SET check_out=$1, pet_id=$2 WHERE id=$3 RETURNING *;',
-                    [date, id, id], function(err, result){
+        client.query('UPDATE visits SET check_out=$1, status=$2 WHERE id=$3 RETURNING *;',
+                    [check_out, status, id], function(err, result){
                         if(err){
                             console.log('Error querying database',err);
                             res.sendStatus(500);
@@ -89,8 +94,3 @@ console.log(date);
 
 
 module.exports=router;
-
-
-
-//initialize the database connection pool defaults at 10 connection
-var pool = new pg.Pool(config);

@@ -1,6 +1,11 @@
 $(function(){
+
+
     getOwners();
     getPets();
+    // getCheckedInStatus();
+
+
     $('#owner').on('submit', registerOwner);
     $('#pet').on('submit', registerPet);
     $('#visits').on('click', '.delete', deleteRow);
@@ -72,10 +77,14 @@ console.log(response);
         $list.append('<td><input type="text" name="pet_breed" value="' +pet.breed +'"/></td>');
         $list.append('<td><input type="text" name="pet_color" value="' +pet.color +'"/></td>');
     //     //make buttons and store the id data on it
-        $list.append('<td><button class="save" data-id="'+ pet.id + '">Save!</button></td>');
-        $list.append('<td><button class="delete" data-id="' + pet.id +'">DELETE!</button></td>');
-        $list.append('<td><button class="checkIn" data-id="' + pet.id +'" value="check">IN</button></td>');
+        $list.append('<td><button class="save" data-id="'+ pet.petid + '">Save!</button></td>');
+        $list.append('<td><button class="delete" data-id="' + pet.petid +'">DELETE!</button></td>');
 
+if(pet.status==null){
+    $list.append('<td><button class="checkIn" data-id="' + pet.visitid+'" value="check">IN</button></td>');
+}else {
+$list.append('<td><button class="checkIn" data-id="' + pet.visitid+'" value="check">'+pet.status+'</button></td>');
+}
     //     $li.append($form);
   $('#visits').append($list);
 
@@ -149,15 +158,30 @@ function updateStatus(){
     var status = $(this).text();
 
     var pet_id= $button.closest('tr').find('.save').data('id');
-    var data ={status:status, date:date, pet_id:pet_id};
+
 
     if(status=='IN'){
-        updateCheckIn($button.data('id'));
-        $(this).text('OUT');
+        updateCheckIn(pet_id);
+
+
 
     }else if (status=='OUT') {
-        updateCheckOut();
-        $(this).text('IN');
+
+        var data ={check_out:date, status:'IN', pet_id:pet_id};
+                console.log(data);
+
+            // dat
+            $.ajax({
+                type:'PUT',
+                url:'/status/'+$button.data('id'),
+                data:data,
+                success: getPets
+
+            });
+
+
+        // updateCheckOut($button.data('id'));
+
     }
 
 }
@@ -170,7 +194,7 @@ function updateCheckIn(response){
     var pet_id=response;
     //
     // var pet_id= $button.closest('tr').find('.save').data('id');
-    var data ={check_in:date, pet_id:pet_id};
+    var data ={check_in:date, status:'OUT', pet_id:pet_id};
     //
  console.log('updateCheckIndata',data);
     //
@@ -179,30 +203,16 @@ function updateCheckIn(response){
         url:'/status/IN',
         data:data,
         success: function(){
+            getPets();
             console.log('Pet is now checked in!');
+
         }
 
     });
 
 }
-function updateCheckOut(){
-    var date = new Date();
-    date=date.toLocaleDateString();
-    var pet_id=response;
-    //
-    // var pet_id= $button.closest('tr').find('.save').data('id');
-    var data ={check_in:date, pet_id:pet_id};
 
-
-        console.log(data);
-
-
-    // dat
-    $.ajax({
-        type:'PUT',
-        url:'/status/'+$button.data('id'),
-        data:data,
-        success: getPets
-
-    });
-}
+// function getCheckedInStatus(){
+//
+//
+// }
